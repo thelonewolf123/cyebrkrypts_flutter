@@ -22,15 +22,18 @@ class _OutputTabWidgetState extends State<OutputTabWidget> {
         decoration: const BoxDecoration(
           color: Color.fromARGB(255, 26, 26, 26),
         ),
+        height: double.infinity,
         child: Column(
           children: [
             ...context
                 .read<CodeProvider>()
                 .output
-                .map((e) => Text(
-                      e,
-                      style: const TextStyle(color: Colors.white),
-                    ))
+                .map(
+                  (e) => Text(
+                    e,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                )
                 .toList(),
           ],
         ),
