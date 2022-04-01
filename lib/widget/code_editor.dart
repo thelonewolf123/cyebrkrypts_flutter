@@ -61,9 +61,8 @@ class _CodeEditorWidgetState extends State<CodeEditorWidget> {
       String text = _controller!.text;
       _controller!.text =
           text.substring(0, offset) + str + text.substring(offset);
-      final textVal =
-          TextSelection.collapsed(offset: _controller!.text.length - offset);
-      _controller!.selection = textVal;
+      _controller!.selection =
+          TextSelection.collapsed(offset: offset + str.length);
     }
   }
 
@@ -191,7 +190,7 @@ class _CodeEditorWidgetState extends State<CodeEditorWidget> {
           left: 0,
           right: 0,
           child: SizedBox(
-            width: MediaQuery.of(context).size.width - 100,
+            width: MediaQuery.of(context).size.width,
             child: ToolBarWidget(
               onKeyPress: onKeyPress,
             ),

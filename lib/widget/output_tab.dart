@@ -17,26 +17,27 @@ class _OutputTabWidgetState extends State<OutputTabWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        decoration: const BoxDecoration(
-          color: Color.fromARGB(255, 26, 26, 26),
-        ),
-        height: double.infinity,
-        child: Column(
-          children: [
-            ...context
-                .read<CodeProvider>()
-                .output
-                .map(
-                  (e) => Text(
-                    e,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                )
-                .toList(),
-          ],
-        ),
+    return Container(
+      height: double.infinity,
+      padding: const EdgeInsets.all(8),
+      decoration: const BoxDecoration(
+        color: Color.fromARGB(255, 26, 26, 26),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ...context
+              .read<CodeProvider>()
+              .output
+              .map(
+                (e) => Text(
+                  e,
+                  style: const TextStyle(fontSize: 16, color: Colors.white),
+                ),
+              )
+              .toList(),
+        ],
       ),
     );
   }

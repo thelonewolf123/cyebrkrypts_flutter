@@ -28,13 +28,18 @@ class _CompilerScreenState extends State<CompilerScreen>
     String stdin = context.read<CodeProvider>().stdin;
 
     var output = await PythonInterpreter.runPythonCode(code, stdin, []);
+    print(output.stdout);
 
-    if (output.run['stderr'] != null) {
-      context.read<CodeProvider>().output.add(output.run['stderr']);
-    } else {
-      context.read<CodeProvider>().setOutput(output.run['output']);
-      print(output.run['output']);
-    }
+    context.read<CodeProvider>().setOutput(output.stdout.split('\n'));
+
+    // if (output.stderr != null) {
+    //   context.read<CodeProvider>().output.add(output.stderr);
+    //   print(output.stderr);
+    // } else {
+    //   context.read<CodeProvider>().setOutput(output.stdout);
+    //   print(output.stdout);
+    // }
+
     _tabController.animateTo(1);
   }
 
@@ -111,7 +116,11 @@ class _CompilerScreenState extends State<CompilerScreen>
         CodeEditorWidget(
           onRun: _runCode,
         ),
-        const OutputTabWidget()
+        Container(
+          height: double.infinity,
+          decoration: const BoxDecoration(color: Colors.black54),
+          child: const OutputTabWidget(),
+        )
       ]),
     );
   }

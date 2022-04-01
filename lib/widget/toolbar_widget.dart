@@ -7,9 +7,10 @@ class ToolBarWidget extends StatelessWidget {
     'Tab',
     '(',
     ')',
-    '{',
-    '}',
     ':',
+    '\\',
+    '"',
+    '\'',
     ';',
     '.',
     ',',
@@ -30,9 +31,8 @@ class ToolBarWidget extends StatelessWidget {
     '@',
     '#',
     '\$',
-    '\\',
-    '"',
-    '\''
+    '{',
+    '}',
   ];
   _handleEvent(String value) {
     if (value == 'Tab') {
