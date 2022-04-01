@@ -5,7 +5,13 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:provider/provider.dart';
 import 'package:cyberkrypts/provider/code_provider.dart';
 
-void main() {
+InAppLocalhostServer localhostServer = InAppLocalhostServer();
+
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // start the localhost server
+  await localhostServer.start();
   runApp(
     MultiProvider(
       providers: [

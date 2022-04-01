@@ -108,12 +108,12 @@ class _CompilerScreenState extends State<CompilerScreen>
           ],
         ),
       ),
-      body: TabBarView(controller: _tabController, children: [
+      body: TabBarView(controller: _tabController, children: const [
         // CodeEditorWidget(
         //   onRun: _runCode,
         // ),
         MonacoEdiot(),
-        const OutputTabWidget()
+        OutputTabWidget()
       ]),
     );
   }
