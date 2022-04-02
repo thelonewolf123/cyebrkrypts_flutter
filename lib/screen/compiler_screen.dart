@@ -1,7 +1,7 @@
 import 'package:cyberkrypts/common/file_handling.dart';
 import 'package:cyberkrypts/common/python_interpreter.dart';
 import 'package:cyberkrypts/provider/code_provider.dart';
-import 'package:cyberkrypts/widget/code_editor.dart';
+// import 'package:cyberkrypts/widget/code_editor.dart';
 import 'package:cyberkrypts/widget/code_mirror_widget.dart';
 import 'package:cyberkrypts/widget/output_tab.dart';
 import 'package:cyberkrypts/widget/user_input_dialog.dart';
@@ -20,15 +20,13 @@ class _CompilerScreenState extends State<CompilerScreen>
     with TickerProviderStateMixin {
   _runCode() async {
     // show result as alert
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return const UserInputDialog();
-      },
+    String stdin = await _showDialogBox(
+      'Input',
+      'Enter your input here / use new line for multiple inputs',
     );
-
+    context.read<CodeProvider>().setStdin(stdin);
     String code = context.read<CodeProvider>().code;
-    String stdin = context.read<CodeProvider>().stdin;
+    // String stdin = context.read<CodeProvider>().stdin;
 
     var output = await PythonInterpreter.runPythonCode(code, stdin, []);
     print(output.stdout);
@@ -44,6 +42,20 @@ class _CompilerScreenState extends State<CompilerScreen>
     _tabController.animateTo(1);
   }
 
+  _showDialogBox(title, hint) async {
+    var result = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return UserInputDialog(
+          title: title,
+          hint: hint,
+        );
+      },
+    );
+
+    return result;
+  }
+
   void _shareApp() {
     Share.share('Check out my website https://cyberkrypts.com',
         subject: 'Look what I made!');
@@ -55,26 +67,42 @@ class _CompilerScreenState extends State<CompilerScreen>
   Future _handleClick(int value) async {
     switch (value) {
       case 0:
-        _tabController.animateTo(0);
-        String path = await _fileHandling.selectFolder(context);
-        context.read<CodeProvider>().setFilePath(path);
-        String fullPath = path + "/" + context.read<CodeProvider>().fileName;
-        _fileHandling.saveFile(fullPath, context.read<CodeProvider>().code);
         print('open file');
         break;
       case 1:
+        String filePath = context.read<CodeProvider>().filePath;
+        String fileName = context.read<CodeProvider>().fileName;
+        if (filePath.isNotEmpty && fileName.isNotEmpty) {
+          _saveFile(false);
+        } else {
+          _saveFile(true);
+        }
         print('Save');
         break;
       case 2:
+        if (_tabController.index != 0) _tabController.animateTo(0);
+        _saveFile(true);
         print('Save as');
         break;
       case 3:
-        print('Font size');
-        break;
-      case 4:
         print('Default template');
         break;
     }
+  }
+
+  _saveFile(bool saveAs) async {
+    if (saveAs) {
+      String fileName = await _showDialogBox('File Name', 'Enter file name');
+      print("file name: $fileName");
+      String path = await _fileHandling.selectFolder(context);
+      context.read<CodeProvider>().setFilePath(path);
+      fileName = fileName.endsWith(".py") ? fileName : "$fileName.py";
+      context.read<CodeProvider>().setFileName(fileName);
+    }
+    String fullPath = context.read<CodeProvider>().filePath +
+        "/" +
+        context.read<CodeProvider>().fileName;
+    _fileHandling.saveFile(fullPath, context.read<CodeProvider>().code);
   }
 
   @override
@@ -118,8 +146,7 @@ class _CompilerScreenState extends State<CompilerScreen>
                 PopupMenuItem<int>(value: 1, child: Text('Save')),
                 PopupMenuItem<int>(value: 2, child: Text('Save as')),
                 PopupMenuDivider(),
-                PopupMenuItem<int>(value: 3, child: Text('Font size')),
-                PopupMenuItem<int>(value: 4, child: Text('Default template')),
+                PopupMenuItem<int>(value: 3, child: Text('Default template')),
               ],
             ),
           ],
