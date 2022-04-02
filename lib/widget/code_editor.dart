@@ -188,7 +188,7 @@ class _CodeEditorWidgetState extends State<CodeEditorWidget> {
         Positioned(
           bottom: 0,
           left: 0,
-          right: 0,
+          right: 75,
           child: SizedBox(
             width: MediaQuery.of(context).size.width,
             child: ToolBarWidget(

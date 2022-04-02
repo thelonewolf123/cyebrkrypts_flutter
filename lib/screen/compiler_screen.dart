@@ -1,3 +1,4 @@
+import 'package:cyberkrypts/common/file_handling.dart';
 import 'package:cyberkrypts/common/python_interpreter.dart';
 import 'package:cyberkrypts/provider/code_provider.dart';
 import 'package:cyberkrypts/widget/code_editor.dart';
@@ -5,6 +6,7 @@ import 'package:cyberkrypts/widget/output_tab.dart';
 import 'package:cyberkrypts/widget/user_input_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 class CompilerScreen extends StatefulWidget {
   const CompilerScreen({Key? key}) : super(key: key);
@@ -30,25 +32,34 @@ class _CompilerScreenState extends State<CompilerScreen>
     var output = await PythonInterpreter.runPythonCode(code, stdin, []);
     print(output.stdout);
 
-    context.read<CodeProvider>().setOutput(output.stdout.split('\n'));
-
-    // if (output.stderr != null) {
-    //   context.read<CodeProvider>().output.add(output.stderr);
-    //   print(output.stderr);
-    // } else {
-    //   context.read<CodeProvider>().setOutput(output.stdout);
-    //   print(output.stdout);
-    // }
+    if (output.stderr.isNotEmpty) {
+      context.read<CodeProvider>().setOutput(output.stderr.split('\n'));
+      print(output.stderr);
+    } else {
+      context.read<CodeProvider>().setOutput(output.stdout.split('\n'));
+      print(output.stdout);
+    }
 
     _tabController.animateTo(1);
   }
 
-  late TabController _tabController;
+  void _shareApp() {
+    Share.share('Check out my website https://cyberkrypts.com',
+        subject: 'Look what I made!');
+  }
 
-  _handleClick(int value) {
+  late TabController _tabController;
+  late CustomFileHandling _fileHandling;
+
+  Future _handleClick(int value) async {
     switch (value) {
       case 0:
-        print('Open');
+        _tabController.animateTo(0);
+        String path = await _fileHandling.selectFolder(context);
+        context.read<CodeProvider>().setFilePath(path);
+        String fullPath = path + "/" + context.read<CodeProvider>().fileName;
+        _fileHandling.saveFile(fullPath, context.read<CodeProvider>().code);
+        print('open file');
         break;
       case 1:
         print('Save');
@@ -69,6 +80,7 @@ class _CompilerScreenState extends State<CompilerScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _fileHandling = CustomFileHandling();
   }
 
   @override
@@ -97,7 +109,7 @@ class _CompilerScreenState extends State<CompilerScreen>
             ],
           ),
           actions: [
-            IconButton(onPressed: () {}, icon: const Icon(Icons.share)),
+            IconButton(onPressed: _shareApp, icon: const Icon(Icons.share)),
             PopupMenuButton<int>(
               onSelected: (item) => _handleClick(item),
               itemBuilder: (context) => const [
