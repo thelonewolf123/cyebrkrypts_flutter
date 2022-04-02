@@ -15,7 +15,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text('Home'),
       ),
       body: const Center(
-        child: Text("Home Page"),
+        child: Text('Home Screen'),
       ),
     );
   }

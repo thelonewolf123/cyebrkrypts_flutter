@@ -2,6 +2,7 @@ import 'package:cyberkrypts/common/file_handling.dart';
 import 'package:cyberkrypts/common/python_interpreter.dart';
 import 'package:cyberkrypts/provider/code_provider.dart';
 import 'package:cyberkrypts/widget/code_editor.dart';
+import 'package:cyberkrypts/widget/code_mirror_widget.dart';
 import 'package:cyberkrypts/widget/output_tab.dart';
 import 'package:cyberkrypts/widget/user_input_dialog.dart';
 import 'package:flutter/material.dart';
@@ -125,7 +126,7 @@ class _CompilerScreenState extends State<CompilerScreen>
         ),
       ),
       body: TabBarView(controller: _tabController, children: [
-        CodeEditorWidget(
+        CodeMirrorWidget(
           onRun: _runCode,
         ),
         Container(
