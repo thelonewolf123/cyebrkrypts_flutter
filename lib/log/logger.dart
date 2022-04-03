@@ -5,7 +5,7 @@ class Logger {
   LogLevel? level;
   Logger(this.component) {
     print('Logger: $component');
-    level = LogLevel.info;
+    level = LogLevel.error;
   }
 
   void logInfo(String? message) {
@@ -16,13 +16,21 @@ class Logger {
 
   void logError(String? message) {
     if (level == LogLevel.error) {
-      print('Log Error: $component: $message');
+      printError('Log Error: $component: $message');
     }
   }
 
   void logDebug(String? message) {
     if (level == LogLevel.debug || level == LogLevel.error) {
-      print('Log Debug: $component: $message');
+      printWarning('Log Debug: $component: $message');
     }
+  }
+
+  void printWarning(String text) {
+    print('\x1B[33m$text\x1B[0m');
+  }
+
+  void printError(String text) {
+    print('\x1B[31m$text\x1B[0m');
   }
 }

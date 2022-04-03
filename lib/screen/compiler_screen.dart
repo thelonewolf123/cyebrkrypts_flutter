@@ -5,6 +5,7 @@ import 'package:cyberkrypts/provider/code_provider.dart';
 // import 'package:cyberkrypts/widget/code_editor.dart';
 import 'package:cyberkrypts/widget/code_mirror_widget.dart';
 import 'package:cyberkrypts/widget/output_tab.dart';
+import 'package:cyberkrypts/widget/snack_bar_widget.dart';
 import 'package:cyberkrypts/widget/user_input_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -70,6 +71,7 @@ class _CompilerScreenState extends State<CompilerScreen>
   Future _handleClick(int value) async {
     switch (value) {
       case 0:
+        _openFile();
         logger.logDebug('open file');
         break;
       case 1:
@@ -103,10 +105,22 @@ class _CompilerScreenState extends State<CompilerScreen>
       context.read<CodeProvider>().setFilePath(path);
       context.read<CodeProvider>().setFileName(fileName);
     }
-    String fullPath = context.read<CodeProvider>().filePath +
-        "/" +
-        context.read<CodeProvider>().fileName;
+    String folderPath = context.read<CodeProvider>().filePath;
+    String file = context.read<CodeProvider>().fileName;
+    String fullPath = "$folderPath/$file";
     _fileHandling.saveFile(fullPath, context.read<CodeProvider>().code);
+    SnackBarWidget.showSnakBar(context, "File saved successfully");
+  }
+
+  Future<String> _openFile() async {
+    String filePath = await _fileHandling.selectFile(context);
+    if (filePath.isEmpty) return '';
+    String fileName = filePath.split('/').last;
+    filePath = filePath.substring(0, filePath.length - fileName.length - 1);
+    context.read<CodeProvider>().setFilePath(filePath);
+    context.read<CodeProvider>().setFileName(fileName);
+    String content = await _fileHandling.readFile('$filePath/$fileName');
+    return content;
   }
 
   @override

@@ -27,6 +27,21 @@ class CustomFileHandling {
     return '';
   }
 
+  Future<String> selectFile(context) async {
+    logger.logDebug('selectFile');
+    final status = await isPermissionAvailable();
+    if (status) {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['py'],
+      );
+      logger.logDebug(result!.files.first.path);
+      String? path = result.files.first.path;
+      return path ?? '';
+    }
+    return '';
+  }
+
   Future isPermissionAvailable() async {
     bool status = false;
     if (!kIsWeb) {
