@@ -1,11 +1,14 @@
+import 'package:cyberkrypts/log/logger.dart';
 import 'package:flutter/material.dart';
 import '../widget/alert_widget.dart';
 
 class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({Key? key}) : super(key: key);
+  SettingsScreen({Key? key}) : super(key: key);
+
+  Logger logger = Logger('SettingsScreen');
 
   _logout() {
-    print('logout');
+    logger.logDebug('logout');
   }
 
   @override

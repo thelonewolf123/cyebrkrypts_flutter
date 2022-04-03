@@ -1,25 +1,30 @@
 import 'dart:io';
 
+import 'package:cyberkrypts/log/logger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:file_picker/file_picker.dart';
 
 class CustomFileHandling {
+  Logger logger = Logger('CustomFileHandling');
+
   CustomFileHandling();
 
   Future saveFile(String path, String content) async {
-    print('saveFile: $path, $content');
+    logger.logDebug('saveFile: $path, $content');
     final file = File(path);
     await file.writeAsString(content);
   }
 
-  Future selectFolder(context) async {
-    print('selectFolder');
+  Future<String> selectFolder(context) async {
+    logger.logDebug('selectFolder');
     final status = await isPermissionAvailable();
     if (status) {
       String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
-      print(selectedDirectory);
+      logger.logDebug(selectedDirectory);
+      return selectedDirectory ?? '';
     }
+    return '';
   }
 
   Future isPermissionAvailable() async {
@@ -37,7 +42,7 @@ class CustomFileHandling {
   Future<String> readFile(String filePath) async {
     File file = File(filePath); // 1
     String fileContent = await file.readAsString(); // 2
-    print('File Content: $fileContent');
+    logger.logDebug('File Content: $fileContent');
     return fileContent;
   }
 }

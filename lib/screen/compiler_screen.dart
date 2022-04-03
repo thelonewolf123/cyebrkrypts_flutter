@@ -1,5 +1,6 @@
 import 'package:cyberkrypts/common/file_handling.dart';
 import 'package:cyberkrypts/common/python_interpreter.dart';
+import 'package:cyberkrypts/log/logger.dart';
 import 'package:cyberkrypts/provider/code_provider.dart';
 // import 'package:cyberkrypts/widget/code_editor.dart';
 import 'package:cyberkrypts/widget/code_mirror_widget.dart';
@@ -18,6 +19,8 @@ class CompilerScreen extends StatefulWidget {
 
 class _CompilerScreenState extends State<CompilerScreen>
     with TickerProviderStateMixin {
+  Logger logger = Logger('CompilerScreen');
+
   _runCode() async {
     // show result as alert
     String stdin = await _showDialogBox(
@@ -29,14 +32,14 @@ class _CompilerScreenState extends State<CompilerScreen>
     // String stdin = context.read<CodeProvider>().stdin;
 
     var output = await PythonInterpreter.runPythonCode(code, stdin, []);
-    print(output.stdout);
+    logger.logDebug(output.stdout);
 
     if (output.stderr.isNotEmpty) {
       context.read<CodeProvider>().setOutput(output.stderr.split('\n'));
-      print(output.stderr);
+      logger.logDebug(output.stderr);
     } else {
       context.read<CodeProvider>().setOutput(output.stdout.split('\n'));
-      print(output.stdout);
+      logger.logDebug(output.stdout);
     }
 
     _tabController.animateTo(1);
@@ -67,7 +70,7 @@ class _CompilerScreenState extends State<CompilerScreen>
   Future _handleClick(int value) async {
     switch (value) {
       case 0:
-        print('open file');
+        logger.logDebug('open file');
         break;
       case 1:
         String filePath = context.read<CodeProvider>().filePath;
@@ -77,15 +80,15 @@ class _CompilerScreenState extends State<CompilerScreen>
         } else {
           _saveFile(true);
         }
-        print('Save');
+        logger.logDebug('Save');
         break;
       case 2:
         if (_tabController.index != 0) _tabController.animateTo(0);
         _saveFile(true);
-        print('Save as');
+        logger.logDebug('Save as');
         break;
       case 3:
-        print('Default template');
+        logger.logDebug('Default template');
         break;
     }
   }
@@ -93,10 +96,11 @@ class _CompilerScreenState extends State<CompilerScreen>
   _saveFile(bool saveAs) async {
     if (saveAs) {
       String fileName = await _showDialogBox('File Name', 'Enter file name');
-      print("file name: $fileName");
-      String path = await _fileHandling.selectFolder(context);
-      context.read<CodeProvider>().setFilePath(path);
       fileName = fileName.endsWith(".py") ? fileName : "$fileName.py";
+      logger.logDebug("file name: $fileName");
+      String path = await _fileHandling.selectFolder(context);
+      if (path.isEmpty) return;
+      context.read<CodeProvider>().setFilePath(path);
       context.read<CodeProvider>().setFileName(fileName);
     }
     String fullPath = context.read<CodeProvider>().filePath +

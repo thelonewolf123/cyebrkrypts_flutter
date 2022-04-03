@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cyberkrypts/log/logger.dart';
 import 'package:cyberkrypts/provider/code_provider.dart';
 import 'package:cyberkrypts/widget/toolbar_widget.dart';
 import 'package:flutter/material.dart';
@@ -18,14 +19,23 @@ class _CodeMirrorWidgetState extends State<CodeMirrorWidget> {
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
 
+  Logger logger = Logger('CodeMirrorWidget');
+
   @override
   void initState() {
     super.initState();
+    _controller.future.then((controller) {
+      controller.runJavascript(
+          'window.editor.setValue("${context.read<CodeProvider>().code}")');
+    });
   }
 
   _onKeyPress(String key) {
     if (key.isNotEmpty) {
       _controller.future.then((controller) {
+        if (key == '"' || key == "\\") {
+          key = '\\' + key;
+        }
         controller.runJavascript(
             'document.execCommand("insertText", false, "$key");');
       });
@@ -47,7 +57,7 @@ class _CodeMirrorWidgetState extends State<CodeMirrorWidget> {
             JavascriptChannel(
                 name: 'onCodeChange',
                 onMessageReceived: (s) {
-                  print("Meessage from js " + s.message);
+                  logger.logDebug("Meessage from js " + s.message);
                   context.read<CodeProvider>().setCode(s.message);
                 }),
           },
