@@ -24,21 +24,29 @@ class _CodeMirrorWidgetState extends State<CodeMirrorWidget> {
   @override
   void initState() {
     super.initState();
+  }
+
+  _initCode(controller) {
+    controller.runJavascript(
+        'window.editor.setValue(`${context.read<CodeProvider>().code}`)');
+  }
+
+  _onCodeChange(s) {
+    context.read<CodeProvider>().setCode(s.message);
+  }
+
+  _onEditorReady(s) {
+    logger.logDebug('Editor ready');
     _controller.future.then((controller) {
-      controller.runJavascript(
-          'window.editor.setValue("${context.read<CodeProvider>().code}")');
+      _initCode(controller);
     });
   }
 
-  _onKeyPress(String key) {
+  _onKeyPress(String key) async {
     if (key.isNotEmpty) {
-      _controller.future.then((controller) {
-        if (key == '"' || key == "\\") {
-          key = '\\' + key;
-        }
-        controller.runJavascript(
-            'document.execCommand("insertText", false, "$key");');
-      });
+      var controller = await _controller.future;
+      controller
+          .runJavascript('document.execCommand("insertText", false, `$key`);');
     }
   }
 
@@ -52,14 +60,17 @@ class _CodeMirrorWidgetState extends State<CodeMirrorWidget> {
             _controller.complete(webViewController);
             await webViewController
                 .loadFlutterAsset('assets/html/code_mirror.html');
+            _initCode(webViewController);
           },
           javascriptChannels: <JavascriptChannel>{
             JavascriptChannel(
-                name: 'onCodeChange',
-                onMessageReceived: (s) {
-                  logger.logDebug("Meessage from js " + s.message);
-                  context.read<CodeProvider>().setCode(s.message);
-                }),
+              name: 'onCodeChange',
+              onMessageReceived: _onCodeChange,
+            ),
+            JavascriptChannel(
+              name: 'onEditorReady',
+              onMessageReceived: _onEditorReady,
+            ),
           },
         ),
         Positioned(

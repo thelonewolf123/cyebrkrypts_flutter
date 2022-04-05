@@ -33,7 +33,7 @@ class _CompilerScreenState extends State<CompilerScreen>
     // String stdin = context.read<CodeProvider>().stdin;
 
     var output = await PythonInterpreter.runPythonCode(code, stdin, []);
-    logger.logDebug(output.stdout);
+    if (output == null) return;
 
     if (output.stderr.isNotEmpty) {
       context.read<CodeProvider>().setOutput(output.stderr.split('\n'));

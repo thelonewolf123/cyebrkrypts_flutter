@@ -30,9 +30,7 @@
     });
     editor.on("change", (event) => {
       dispatch("change", event);
-      onCodeChange.postMessage(editor.getValue());
     });
-    window.editor = editor;
     // More events could be set up here
   }
 </script>

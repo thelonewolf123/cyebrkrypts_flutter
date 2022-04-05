@@ -31,6 +31,7 @@
 .pub/
 /build/
 /code_mirror/node_modules/
+/code_mirror/src/build/
 
 # Web related
 lib/generated_plugin_registrant.dart

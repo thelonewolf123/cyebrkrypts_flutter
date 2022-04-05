@@ -12,6 +12,8 @@
   let cursor_activity = false;
   onMount(() => {
     console.log("Editor: ", editor);
+    window.editor = editor;
+    onEditorReady.postMessage(editor);
   });
 
   function cursorMoved(event) {
@@ -22,17 +24,9 @@
 
   function changed(event) {
     window.code = editor.getValue();
-    console.log("changed");
+    onCodeChange.postMessage(editor.getValue());
     // console.log(event.detail)
   }
-  function setCode(code) {
-    options = {
-      mode: "python",
-      lineNumbers: true,
-      value: code,
-    };
-  }
-  window.setCode = setCode;
 </script>
 
 <CodeMirror

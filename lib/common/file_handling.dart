@@ -11,9 +11,12 @@ class CustomFileHandling {
   CustomFileHandling();
 
   Future saveFile(String path, String content) async {
-    logger.logDebug('saveFile: $path, $content');
-    final file = File(path);
-    await file.writeAsString(content);
+    try {
+      final file = File(path);
+      await file.writeAsString(content);
+    } catch (e) {
+      logger.logError('Error while saving file: $e');
+    }
   }
 
   Future<String> selectFolder(context) async {
@@ -24,6 +27,7 @@ class CustomFileHandling {
       logger.logDebug(selectedDirectory);
       return selectedDirectory ?? '';
     }
+    logger.logError('Permission not available');
     return '';
   }
 
@@ -39,6 +43,7 @@ class CustomFileHandling {
       String? path = result.files.first.path;
       return path ?? '';
     }
+    logger.logError('No permission');
     return '';
   }
 
@@ -56,8 +61,12 @@ class CustomFileHandling {
 
   Future<String> readFile(String filePath) async {
     File file = File(filePath); // 1
-    String fileContent = await file.readAsString(); // 2
-    logger.logDebug('File Content: $fileContent');
-    return fileContent;
+    try {
+      String contents = await file.readAsString();
+      return contents;
+    } catch (e) {
+      logger.logError('readFile: $e');
+      return '';
+    }
   }
 }
