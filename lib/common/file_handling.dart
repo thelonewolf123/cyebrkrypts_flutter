@@ -35,13 +35,16 @@ class CustomFileHandling {
     logger.logDebug('selectFile');
     final status = await isPermissionAvailable();
     if (status) {
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['py'],
-      );
-      logger.logDebug(result!.files.first.path);
-      String? path = result.files.first.path;
-      return path ?? '';
+      try {
+        FilePickerResult? result =
+            await FilePicker.platform.pickFiles(type: FileType.any);
+        logger.logDebug(result!.files.first.path);
+        String? path = result.files.first.path;
+        return path ?? '';
+      } catch (e) {
+        logger.logError('Error while selecting file: $e');
+        return '';
+      }
     }
     logger.logError('No permission');
     return '';

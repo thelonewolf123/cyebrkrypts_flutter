@@ -4,13 +4,13 @@ class Logger {
   String component;
   LogLevel? level;
   Logger(this.component) {
-    print('Logger: $component');
+    printInfo('Logger: $component');
     level = LogLevel.error;
   }
 
   void logInfo(String? message) {
     if (level != LogLevel.none) {
-      print('Log Info: $component: $message');
+      printInfo('Log Info: $component: $message');
     }
   }
 
@@ -32,5 +32,9 @@ class Logger {
 
   void printError(String text) {
     print('\x1B[31m$text\x1B[0m');
+  }
+
+  void printInfo(String text) {
+    print('\x1B[32m$text\x1B[0m');
   }
 }

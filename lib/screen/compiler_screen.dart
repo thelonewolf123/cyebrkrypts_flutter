@@ -71,8 +71,9 @@ class _CompilerScreenState extends State<CompilerScreen>
   Future _handleClick(int value) async {
     switch (value) {
       case 0:
-        _openFile();
         logger.logDebug('open file');
+        String code = await _openFile();
+        context.read<CodeProvider>().setCode(code);
         break;
       case 1:
         String filePath = context.read<CodeProvider>().filePath;
@@ -97,13 +98,21 @@ class _CompilerScreenState extends State<CompilerScreen>
 
   _saveFile(bool saveAs) async {
     if (saveAs) {
-      String fileName = await _showDialogBox('File Name', 'Enter file name');
+      String fileName = '';
+      try {
+        fileName = await _showDialogBox('File Name', 'Enter file name');
+      } catch (e) {
+        logger.logError('Error while saving file: $e');
+        return;
+      }
       fileName = fileName.endsWith(".py") ? fileName : "$fileName.py";
       logger.logDebug("file name: $fileName");
       String path = await _fileHandling.selectFolder(context);
       if (path.isEmpty) return;
       context.read<CodeProvider>().setFilePath(path);
       context.read<CodeProvider>().setFileName(fileName);
+      String fullPath = '$path/$fileName';
+      _fileHandling.saveFile(fullPath, context.read<CodeProvider>().code);
     }
     String folderPath = context.read<CodeProvider>().filePath;
     String file = context.read<CodeProvider>().fileName;
@@ -120,6 +129,7 @@ class _CompilerScreenState extends State<CompilerScreen>
     context.read<CodeProvider>().setFilePath(filePath);
     context.read<CodeProvider>().setFileName(fileName);
     String content = await _fileHandling.readFile('$filePath/$fileName');
+    logger.logDebug('file content: $content');
     return content;
   }
 
