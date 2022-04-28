@@ -9,12 +9,6 @@
     value: "",
   };
   let editor;
-  let cursor_activity = false;
-  onMount(() => {
-    console.log("Editor: ", editor);
-    window.editor = editor;
-    onEditorReady.postMessage(editor);
-  });
 
   function cursorMoved(event) {
     cursor_activity = true;
@@ -37,16 +31,6 @@
   class="editor"
 />
 
-<!-- <p>
-  Cursor Activity: {cursor_activity}
-</p>
-<div>
-  <button on:click={() => editor.execCommand("selectAll")}> Select All </button>
-  <button on:click={() => editor.setCursor(0)}> Cursor at Start </button>
-  <button on:click={() => editor.setCursor(editor.getValue().length)}>
-    Cursor at End
-  </button>
-</div> -->
 <style>
   :global(.editor) {
     font-size: 18px;

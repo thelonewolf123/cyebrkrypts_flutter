@@ -5,7 +5,7 @@ import '../widget/alert_widget.dart';
 class SettingsScreen extends StatelessWidget {
   SettingsScreen({Key? key}) : super(key: key);
 
-  Logger logger = Logger('SettingsScreen');
+  final Logger logger = Logger('SettingsScreen');
 
   _logout() {
     logger.logDebug('logout');

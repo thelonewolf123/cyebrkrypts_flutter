@@ -36,9 +36,9 @@ class _CodeMirrorWidgetState extends State<CodeMirrorWidget> {
   }
 
   _onEditorReady(s) {
-    logger.logDebug('Editor ready');
     _controller.future.then((controller) {
       _initCode(controller);
+      logger.logDebug('code initialized');
     });
   }
 
@@ -60,7 +60,7 @@ class _CodeMirrorWidgetState extends State<CodeMirrorWidget> {
             _controller.complete(webViewController);
             await webViewController
                 .loadFlutterAsset('assets/html/code_mirror.html');
-            _initCode(webViewController);
+            // _initCode(webViewController);
           },
           javascriptChannels: <JavascriptChannel>{
             JavascriptChannel(

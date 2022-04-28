@@ -31,6 +31,9 @@
     editor.on("change", (event) => {
       dispatch("change", event);
     });
+
+    window.editor = editor;
+    onEditorReady.postMessage("editor ready");
     // More events could be set up here
   }
 </script>
@@ -89,8 +92,8 @@
     background-color: var(--cm-background-color);
     white-space: nowrap;
   }
-  :global(.CodeMirror-linenumbers) {
-  }
+  /* :global(.CodeMirror-linenumbers) {
+  } */
   :global(.CodeMirror-linenumber) {
     padding: 0 3px 0 5px;
     min-width: 20px;
@@ -168,8 +171,8 @@
   }
 
   /* Can style cursor different in overwrite (non-insert) mode */
-  :global(.CodeMirror-overwrite .CodeMirror-cursor) {
-  }
+  /* :global(.CodeMirror-overwrite .CodeMirror-cursor) {
+  } */
 
   :global(.cm-tab) {
     display: inline-block;
@@ -230,9 +233,9 @@
   :global(.cm-s-default .cm-def) {
     color: #00f;
   }
-  :global(.cm-s-default .cm-variable, .cm-s-default
+  /* :global(.cm-s-default .cm-variable, .cm-s-default
       .cm-punctuation, .cm-s-default .cm-property, .cm-s-default .cm-operator) {
-  }
+  } */
   :global(.cm-s-default .cm-variable-2) {
     color: #05a;
   }
@@ -457,8 +460,8 @@
     padding: 0.1px; /* Force widget margins to stay inside of the container */
   }
 
-  :global(.CodeMirror-widget) {
-  }
+  /* :global(.CodeMirror-widget) {
+  } */
 
   :global(.CodeMirror-rtl pre) {
     direction: rtl;
