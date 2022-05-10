@@ -9,7 +9,9 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 class CodeMirrorWidget extends StatefulWidget {
   final Function onRun;
-  const CodeMirrorWidget({Key? key, required this.onRun}) : super(key: key);
+  final String code;
+  const CodeMirrorWidget({Key? key, required this.onRun, required this.code})
+      : super(key: key);
 
   @override
   State<CodeMirrorWidget> createState() => _CodeMirrorWidgetState();
@@ -27,8 +29,7 @@ class _CodeMirrorWidgetState extends State<CodeMirrorWidget> {
   }
 
   _initCode(controller) {
-    controller.runJavascript(
-        'window.editor.setValue(`${context.read<CodeProvider>().code}`)');
+    controller.runJavascript('window.editor.setValue(`${widget.code}`);');
   }
 
   _onCodeChange(s) {

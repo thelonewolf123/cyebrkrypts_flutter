@@ -183,6 +183,7 @@ class _CompilerScreenState extends State<CompilerScreen>
       body: TabBarView(controller: _tabController, children: [
         CodeMirrorWidget(
           onRun: _runCode,
+          code: context.read<CodeProvider>().code,
         ),
         Container(
           height: double.infinity,
