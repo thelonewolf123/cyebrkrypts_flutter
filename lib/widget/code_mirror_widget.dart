@@ -67,7 +67,9 @@ class _CodeMirrorWidgetState extends State<CodeMirrorWidget> {
           javascriptChannels: <JavascriptChannel>{
             JavascriptChannel(
               name: 'onCodeChange',
-              onMessageReceived: (s) => {widget.onChange(s.message)},
+              onMessageReceived: (s) {
+                widget.onChange(s.message);
+              },
             ),
             JavascriptChannel(
               name: 'onEditorReady',
