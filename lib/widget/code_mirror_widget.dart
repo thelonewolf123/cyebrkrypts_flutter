@@ -57,9 +57,15 @@ class _CodeMirrorWidgetState extends State<CodeMirrorWidget> {
     return Stack(
       children: [
         WebView(
+          key: widget.code.isEmpty ? null : Key(widget.code),
           javascriptMode: JavascriptMode.unrestricted,
           onWebViewCreated: (WebViewController webViewController) async {
-            _controller.complete(webViewController);
+            try {
+              _controller.complete(webViewController);
+            } catch (e) {
+              logger.logError(e.toString());
+            }
+
             await webViewController
                 .loadFlutterAsset('assets/html/code_mirror.html');
             // _initCode(webViewController);

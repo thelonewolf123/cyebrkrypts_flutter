@@ -78,6 +78,7 @@ class _CompilerScreenState extends State<CompilerScreen>
         logger.logDebug('open file');
         String code = await _openFile();
         context.read<CodeProvider>().setCode(code);
+        _initCode();
         break;
       case 1:
         String filePath = context.read<CodeProvider>().filePath;
@@ -97,6 +98,7 @@ class _CompilerScreenState extends State<CompilerScreen>
       case 3:
         logger.logDebug('Default template');
         context.read<CodeProvider>().setCode('print("Hello World!")');
+        _initCode();
         break;
     }
   }
@@ -143,8 +145,7 @@ class _CompilerScreenState extends State<CompilerScreen>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _fileHandling = CustomFileHandling();
-
-    context.read<CodeProvider>().addListener(_initCode);
+    _initCode();
   }
 
   _initCode() {
@@ -162,7 +163,6 @@ class _CompilerScreenState extends State<CompilerScreen>
   void dispose() {
     super.dispose();
     _tabController.dispose();
-    context.read<CodeProvider>().removeListener(_initCode);
   }
 
   @override
@@ -207,7 +207,7 @@ class _CompilerScreenState extends State<CompilerScreen>
         ),
         Container(
           height: double.infinity,
-          decoration: const BoxDecoration(color: Colors.black54),
+          decoration: const BoxDecoration(color: Color.fromRGBO(34, 34, 34, 1)),
           child: const OutputTabWidget(),
         )
       ]),

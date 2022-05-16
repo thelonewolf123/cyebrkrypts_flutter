@@ -59,6 +59,12 @@
   }
   /* } */
 
+  :global(html),
+  :global(body) {
+    margin: 0px;
+    padding: 0px;
+  }
+
   /* BASICS */
   :global(.CodeMirror) {
     /* Set height, width, borders, and global font properties here */
