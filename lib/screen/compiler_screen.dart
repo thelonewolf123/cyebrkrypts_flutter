@@ -22,6 +22,10 @@ class _CompilerScreenState extends State<CompilerScreen>
     with TickerProviderStateMixin {
   Logger logger = Logger('CompilerScreen');
 
+  // ignore: non_constant_identifier_names
+  String pythonFileName = '';
+  String pythonCode = '';
+
   _runCode() async {
     // show result as alert
     String stdin = await _showDialogBox(
@@ -139,6 +143,15 @@ class _CompilerScreenState extends State<CompilerScreen>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _fileHandling = CustomFileHandling();
+
+    context.read<CodeProvider>().addListener(_initCode);
+  }
+
+  _initCode() {
+    setState(() {
+      pythonFileName = context.read<CodeProvider>().fileName;
+      pythonCode = context.read<CodeProvider>().code;
+    });
   }
 
   _onCodeChange(s) {
@@ -149,6 +162,7 @@ class _CompilerScreenState extends State<CompilerScreen>
   void dispose() {
     super.dispose();
     _tabController.dispose();
+    context.read<CodeProvider>().removeListener(_initCode);
   }
 
   @override
@@ -157,7 +171,7 @@ class _CompilerScreenState extends State<CompilerScreen>
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(100.0),
         child: AppBar(
-          title: Text(context.read<CodeProvider>().fileName),
+          title: Text(pythonFileName),
           backgroundColor: Colors.green,
           bottom: TabBar(
             controller: _tabController,
@@ -189,7 +203,7 @@ class _CompilerScreenState extends State<CompilerScreen>
         CodeMirrorWidget(
           onRun: _runCode,
           onChange: _onCodeChange,
-          code: context.read<CodeProvider>().code,
+          code: pythonCode,
         ),
         Container(
           height: double.infinity,
