@@ -41,23 +41,23 @@
 <div bind:this={element} class={classes} />
 
 <style unscoped>
-  @media (prefers-color-scheme: light) {
+  /* @media (prefers-color-scheme: light) {
     :root {
       --cm-border-color: #ccc;
       --cm-background-color: white;
       --cm-medium-color: #ccc;
       --cm-text-color: #222;
     }
-  }
+  } */
 
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --cm-border-color: #ccc;
-      --cm-background-color: #222;
-      --cm-medium-color: #ccc;
-      --cm-text-color: white;
-    }
+  /* @media (prefers-color-scheme: dark) { */
+  :root {
+    --cm-border-color: #ccc;
+    --cm-background-color: #222;
+    --cm-medium-color: #ccc;
+    --cm-text-color: white;
   }
+  /* } */
 
   /* BASICS */
   :global(.CodeMirror) {
