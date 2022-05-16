@@ -1,17 +1,22 @@
 import 'dart:async';
 
 import 'package:cyberkrypts/log/logger.dart';
-import 'package:cyberkrypts/provider/code_provider.dart';
 import 'package:cyberkrypts/widget/toolbar_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class CodeMirrorWidget extends StatefulWidget {
   final Function onRun;
+  final Function onChange;
+
   final String code;
-  const CodeMirrorWidget({Key? key, required this.onRun, required this.code})
-      : super(key: key);
+
+  const CodeMirrorWidget({
+    Key? key,
+    required this.onRun,
+    required this.onChange,
+    required this.code,
+  }) : super(key: key);
 
   @override
   State<CodeMirrorWidget> createState() => _CodeMirrorWidgetState();
@@ -30,10 +35,6 @@ class _CodeMirrorWidgetState extends State<CodeMirrorWidget> {
 
   _initCode(controller) {
     controller.runJavascript('window.editor.setValue(`${widget.code}`);');
-  }
-
-  _onCodeChange(s) {
-    context.read<CodeProvider>().setCode(s.message);
   }
 
   _onEditorReady(s) {
@@ -66,7 +67,7 @@ class _CodeMirrorWidgetState extends State<CodeMirrorWidget> {
           javascriptChannels: <JavascriptChannel>{
             JavascriptChannel(
               name: 'onCodeChange',
-              onMessageReceived: _onCodeChange,
+              onMessageReceived: (s) => {widget.onChange(s.message)},
             ),
             JavascriptChannel(
               name: 'onEditorReady',

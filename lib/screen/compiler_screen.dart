@@ -92,6 +92,7 @@ class _CompilerScreenState extends State<CompilerScreen>
         break;
       case 3:
         logger.logDebug('Default template');
+        context.read<CodeProvider>().setCode('print("Hello World!")');
         break;
     }
   }
@@ -140,6 +141,10 @@ class _CompilerScreenState extends State<CompilerScreen>
     _fileHandling = CustomFileHandling();
   }
 
+  _onCodeChange(s) {
+    context.read<CodeProvider>().setCode(s);
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -183,6 +188,7 @@ class _CompilerScreenState extends State<CompilerScreen>
       body: TabBarView(controller: _tabController, children: [
         CodeMirrorWidget(
           onRun: _runCode,
+          onChange: _onCodeChange,
           code: context.read<CodeProvider>().code,
         ),
         Container(
