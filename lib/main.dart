@@ -11,11 +11,15 @@ void main() {
         ChangeNotifierProvider(create: (context) => CodeProvider()),
       ],
       child: MaterialApp(
-        title: 'CyberKrypts App',
-        initialRoute: '/',
-        routes: {
-          '/': (context) => const SafeArea(child: CompilerScreen()),
-        },
+        title: 'CyberKrypts',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: const SafeArea(
+          child: CompilerScreen(),
+        ),
       ),
     ),
   );

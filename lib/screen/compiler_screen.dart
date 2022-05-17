@@ -2,14 +2,13 @@ import 'package:cyberkrypts/common/file_handling.dart';
 import 'package:cyberkrypts/common/python_interpreter.dart';
 import 'package:cyberkrypts/log/logger.dart';
 import 'package:cyberkrypts/provider/code_provider.dart';
-// import 'package:cyberkrypts/widget/code_editor.dart';
 import 'package:cyberkrypts/widget/code_mirror_widget.dart';
 import 'package:cyberkrypts/widget/output_tab.dart';
-import 'package:cyberkrypts/widget/snack_bar_widget.dart';
 import 'package:cyberkrypts/widget/user_input_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class CompilerScreen extends StatefulWidget {
   const CompilerScreen({Key? key}) : super(key: key);
@@ -25,6 +24,7 @@ class _CompilerScreenState extends State<CompilerScreen>
   // ignore: non_constant_identifier_names
   String pythonFileName = '';
   String pythonCode = '';
+  int renderKey = 0;
 
   _runCode() async {
     // show result as alert
@@ -78,29 +78,29 @@ class _CompilerScreenState extends State<CompilerScreen>
         logger.logDebug('open file');
         String code = await _openFile();
         context.read<CodeProvider>().setCode(code);
-        _initCode();
         break;
       case 1:
         String filePath = context.read<CodeProvider>().filePath;
         String fileName = context.read<CodeProvider>().fileName;
         if (filePath.isNotEmpty && fileName.isNotEmpty) {
-          _saveFile(false);
+          await _saveFile(false);
         } else {
-          _saveFile(true);
+          await _saveFile(true);
         }
         logger.logDebug('Save');
         break;
       case 2:
         if (_tabController.index != 0) _tabController.animateTo(0);
-        _saveFile(true);
+        await _saveFile(true);
         logger.logDebug('Save as');
         break;
       case 3:
         logger.logDebug('Default template');
         context.read<CodeProvider>().setCode('print("Hello World!")');
-        _initCode();
         break;
     }
+
+    _initCode();
   }
 
   _saveFile(bool saveAs) async {
@@ -125,7 +125,15 @@ class _CompilerScreenState extends State<CompilerScreen>
     String file = context.read<CodeProvider>().fileName;
     String fullPath = "$folderPath/$file";
     _fileHandling.saveFile(fullPath, context.read<CodeProvider>().code);
-    SnackBarWidget.showSnakBar(context, "File saved successfully");
+
+    Fluttertoast.showToast(
+        msg: "File saved successfully",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
   }
 
   Future<String> _openFile() async {
@@ -152,6 +160,7 @@ class _CompilerScreenState extends State<CompilerScreen>
     setState(() {
       pythonFileName = context.read<CodeProvider>().fileName;
       pythonCode = context.read<CodeProvider>().code;
+      renderKey++;
     });
   }
 
@@ -171,6 +180,7 @@ class _CompilerScreenState extends State<CompilerScreen>
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(100.0),
         child: AppBar(
+          key: ValueKey(renderKey),
           title: Text(pythonFileName),
           backgroundColor: Colors.green,
           bottom: TabBar(
@@ -201,6 +211,7 @@ class _CompilerScreenState extends State<CompilerScreen>
       ),
       body: TabBarView(controller: _tabController, children: [
         CodeMirrorWidget(
+          key: ValueKey(renderKey),
           onRun: _runCode,
           onChange: _onCodeChange,
           code: pythonCode,

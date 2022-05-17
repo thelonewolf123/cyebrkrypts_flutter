@@ -38,6 +38,7 @@ class _CodeMirrorWidgetState extends State<CodeMirrorWidget> {
   }
 
   _onEditorReady(s) {
+    logger.logDebug('editor ready');
     _controller.future.then((controller) {
       _initCode(controller);
       logger.logDebug('code initialized');
@@ -55,15 +56,13 @@ class _CodeMirrorWidgetState extends State<CodeMirrorWidget> {
   @override
   Widget build(BuildContext context) {
     return Stack(
+      key: widget.key,
       children: [
         WebView(
-          key: widget.code.isEmpty ? null : Key(widget.code),
           javascriptMode: JavascriptMode.unrestricted,
           onWebViewCreated: (WebViewController webViewController) async {
-            try {
+            if (!_controller.isCompleted) {
               _controller.complete(webViewController);
-            } catch (e) {
-              logger.logError(e.toString());
             }
 
             await webViewController
