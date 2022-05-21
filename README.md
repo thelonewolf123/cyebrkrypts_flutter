@@ -1,6 +1,6 @@
 # cyberkrypts
 
-A new E-learning platform project.
+A new python code editor and compiler.
 
 ## Getting Started
 
