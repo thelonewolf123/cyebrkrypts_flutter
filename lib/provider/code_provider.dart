@@ -4,7 +4,6 @@ class CodeProvider with ChangeNotifier {
   String _code = '';
   String _fileName = 'Untitled';
   String _filePath = '';
-  String _stdin = '';
   List<String> _output = [];
 
   String get code => _code;
@@ -12,8 +11,6 @@ class CodeProvider with ChangeNotifier {
   String get fileName => _fileName;
 
   String get filePath => _filePath;
-
-  String get stdin => _stdin;
 
   List<String> get output => _output;
 
@@ -29,11 +26,6 @@ class CodeProvider with ChangeNotifier {
 
   void setFilePath(String value) {
     _filePath = value;
-    notifyListeners();
-  }
-
-  void setStdin(String value) {
-    _stdin = value;
     notifyListeners();
   }
 

@@ -5,7 +5,7 @@ class Logger {
   LogLevel? level;
   Logger(this.component) {
     printInfo('Logger: $component');
-    level = LogLevel.error;
+    level = LogLevel.none;
   }
 
   void logInfo(String? message) {

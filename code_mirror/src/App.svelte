@@ -11,7 +11,6 @@
   let editor;
 
   function cursorMoved(event) {
-    cursor_activity = true;
     console.log("cursor activity");
     // console.log(event.detail)
   }

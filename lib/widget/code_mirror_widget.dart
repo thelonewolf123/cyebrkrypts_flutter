@@ -73,6 +73,7 @@ class _CodeMirrorWidgetState extends State<CodeMirrorWidget> {
             JavascriptChannel(
               name: 'onCodeChange',
               onMessageReceived: (s) {
+                logger.logDebug('onCodeChange: $s');
                 widget.onChange(s.message);
               },
             ),

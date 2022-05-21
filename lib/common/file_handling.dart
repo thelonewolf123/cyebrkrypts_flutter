@@ -55,8 +55,8 @@ class CustomFileHandling {
     if (!kIsWeb) {
       if (Platform.isIOS || Platform.isAndroid || Platform.isMacOS) {
         status = await Permission.storage.isGranted;
-        if (!status) await Permission.storage.request();
-        status = await Permission.storage.isGranted;
+        if (!status) await Permission.manageExternalStorage.request();
+        status = await Permission.manageExternalStorage.isGranted;
       }
     }
     return status;

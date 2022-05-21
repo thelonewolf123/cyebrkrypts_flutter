@@ -32,19 +32,17 @@ class _CompilerScreenState extends State<CompilerScreen>
       'Input',
       'Enter your input here / use new line for multiple inputs',
     );
-    context.read<CodeProvider>().setStdin(stdin);
     String code = context.read<CodeProvider>().code;
     // String stdin = context.read<CodeProvider>().stdin;
 
-    var output = await PythonInterpreter.runPythonCode(code, stdin, []);
+    var output =
+        await PythonInterpreter.runPythonCode(code, stdin, pythonFileName);
     if (output == null) return;
 
     if (output.stderr.isNotEmpty) {
-      context.read<CodeProvider>().setOutput(output.stderr.split('\n'));
-      logger.logDebug(output.stderr);
+      context.read<CodeProvider>().setOutput(output.stderr);
     } else {
-      context.read<CodeProvider>().setOutput(output.stdout.split('\n'));
-      logger.logDebug(output.stdout);
+      context.read<CodeProvider>().setOutput(output.output);
     }
 
     _tabController.animateTo(1);
@@ -65,7 +63,8 @@ class _CompilerScreenState extends State<CompilerScreen>
   }
 
   void _shareApp() {
-    Share.share('Check out my website https://cyberkrypts.com',
+    Share.share(
+        'Check out my project https://github.com/thelonewolf123/cyebrkrypts_flutter',
         subject: 'Look what I made!');
   }
 
@@ -166,6 +165,9 @@ class _CompilerScreenState extends State<CompilerScreen>
 
   _onCodeChange(s) {
     context.read<CodeProvider>().setCode(s);
+    setState(() {
+      pythonCode = s;
+    });
   }
 
   @override
